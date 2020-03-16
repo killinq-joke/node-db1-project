@@ -1,36 +1,13 @@
 const express = require("express");
 
-const db = require("./data/dbConfig.js");
+const helpers = require("./data/helpers")
 
 const server = express();
 
 server.use(express.json());
 
-const get = () => {
-  return db.select().from("accounts");
-};
-
-const getByID = (id) => {
-    return db('accounts').where({id}).first()
-}
-
-const insert = (account) => {
-    return db('accounts').insert(account)
-    .then(ids => {
-        return getByID(ids[0])
-    })
-}
-
-const update = (id, account) => {
-    return db("accounts").where({id}).update(account)
-}
-
-const remove = (id) => {
-    return db("accounts").delete().where({id})
-}
-
 server.get("/", (req, res) => {
-    get()
+    helpers.get()
     .then(response => {
       res.status(200).json(response);
     })
@@ -41,7 +18,7 @@ server.get("/", (req, res) => {
 
 server.get("/:id", (req, res) => {
   const { id } = req.params;
-  getByID(id)
+    helpers.getByID(id)
     .then(response => {
       res.status(200).json(response);
     })
@@ -52,7 +29,7 @@ server.get("/:id", (req, res) => {
 
 server.post("/", (req, res) => {
   const account = req.body;
-    insert(account)
+    helpers.insert(account)
     .then(response => {
       res.status(200).json(response);
     })
@@ -64,7 +41,7 @@ server.post("/", (req, res) => {
 server.put("/:id", (req, res) => {
   const account = req.body;
   const { id } = req.params;
-    update(id, account)
+    helpers.update(id, account)
     .then(response => {
       res.status(200).json(response);
     })
@@ -75,7 +52,7 @@ server.put("/:id", (req, res) => {
 
 server.delete("/:id", (req, res) => {
     const {id} = req.params
-    remove(id)
+    helpers.remove(id)
     .then(response => {
         res.status(200).json("deleted")
     })
