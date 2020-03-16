@@ -7,11 +7,27 @@ const server = express();
 server.use(express.json());
 
 const get = () => {
-  db.select().from("accounts");
+  return db.select().from("accounts");
 };
 
+const getByID = (id) => {
+    return db('accounts').where({id}).first()
+}
+
+const insert = (account) => {
+    return db('accounts').insert(account)
+}
+
+const update = (id, account) => {
+    return db("accounts").where({id}).update(account)
+}
+
+const remove = (id) => {
+    return db("accounts").delete().where({id})
+}
+
 server.get("/", (req, res) => {
-  db("accounts")
+    get()
     .then(response => {
       res.status(200).json(response);
     })
@@ -22,9 +38,7 @@ server.get("/", (req, res) => {
 
 server.get("/:id", (req, res) => {
   const { id } = req.params;
-  db("accounts")
-    .where({ id })
-    .first()
+  getByID(id)
     .then(response => {
       res.status(200).json(response);
     })
@@ -35,8 +49,7 @@ server.get("/:id", (req, res) => {
 
 server.post("/", (req, res) => {
   const account = req.body;
-  db("accounts")
-    .insert(account)
+    insert(account)
     .then(response => {
       res.status(200).json(response);
     })
@@ -48,9 +61,7 @@ server.post("/", (req, res) => {
 server.put("/:id", (req, res) => {
   const account = req.body;
   const { id } = req.params;
-  db("accounts")
-    .where({ id })
-    .update(account)
+    update(id, account)
     .then(response => {
       res.status(200).json(response);
     })
@@ -61,9 +72,7 @@ server.put("/:id", (req, res) => {
 
 server.delete("/:id", (req, res) => {
     const {id} = req.params
-    db("accounts")
-    .where({ id })
-    .delete()
+    remove(id)
     .then(response => {
         res.status(200).json("deleted")
     })
