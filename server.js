@@ -16,6 +16,9 @@ const getByID = (id) => {
 
 const insert = (account) => {
     return db('accounts').insert(account)
+    .then(ids => {
+        return getByID(ids[0])
+    })
 }
 
 const update = (id, account) => {
