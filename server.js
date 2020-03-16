@@ -59,4 +59,17 @@ server.put("/:id", (req, res) => {
     });
 });
 
+server.delete("/:id", (req, res) => {
+    const {id} = req.params
+    db("accounts")
+    .where({ id })
+    .delete()
+    .then(response => {
+        res.status(200).json("deleted")
+    })
+    .catch(err => {
+        res.status(500).end()
+    })
+})
+
 module.exports = server;
